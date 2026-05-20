@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Vitals" />
+  <meta name="theme-color" content="#0d0d1a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>Vitals — Supplement Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="theme-rose">
+
+  <!-- Background blobs -->
+  <div class="bg-layer" id="bgLayer">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="bg-emoji" id="bgEmoji"></div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+
+    <!-- Header -->
+    <header class="glass-header">
+      <div class="header-left">
+        <span class="app-logo">✦ Vitals</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" id="themeBtn" title="Change theme">🎨</button>
+        <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Tab Bar -->
+    <nav class="tab-bar glass-nav">
+      <button class="tab active" data-tab="today">
+        <span class="tab-icon">💊</span>
+        <span class="tab-label">Today</span>
+      </button>
+      <button class="tab" data-tab="supplements">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">My Stack</span>
+      </button>
+      <button class="tab" data-tab="calendar">
+        <span class="tab-icon">📅</span>
+        <span class="tab-label">Calendar</span>
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- TODAY TAB -->
+      <section id="tab-today" class="tab-content active">
+        <div class="section-header">
+          <h1 class="section-title">Today's Doses</h1>
+          <p class="section-sub" id="todayDate"></p>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring" width="110" height="110">
+            <circle class="ring-bg" cx="55" cy="55" r="46" />
+            <circle class="ring-fill" id="ringFill" cx="55" cy="55" r="46" />
+          </svg>
+          <div class="ring-label">
+            <span id="doneCount">0</span>/<span id="totalCount">0</span>
+            <small>done</small>
+          </div>
+        </div>
+        <div id="todayList" class="dose-list"></div>
+      </section>
+
+      <!-- MY STACK TAB -->
+      <section id="tab-supplements" class="tab-content">
+        <div class="section-header">
+          <h1 class="section-title">My Stack</h1>
+          <button class="pill-btn" id="addSupBtn">+ Add Supplement</button>
+        </div>
+        <div id="supList" class="sup-list"></div>
+      </section>
+
+      <!-- CALENDAR TAB -->
+      <section id="tab-calendar" class="tab-content">
+        <div class="section-header">
+          <h1 class="section-title">History</h1>
+        </div>
+        <div class="cal-nav glass-card">
+          <button class="icon-btn" id="calPrev">‹</button>
+          <div class="cal-month-wrap">
+            <select id="calMonthSel" class="cal-select"></select>
+            <select id="calYearSel" class="cal-select"></select>
+          </div>
+          <button class="icon-btn" id="calNext">›</button>
+        </div>
+        <div id="calGrid" class="cal-grid glass-card"></div>
+        <div id="calDayDetail" class="cal-detail glass-card" style="display:none"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- Theme Picker Modal -->
+  <div class="modal-overlay" id="themeModal">
+    <div class="modal glass-modal">
+      <div class="modal-header">
+        <h2>Choose Theme</h2>
+        <button class="close-btn" data-modal="themeModal">✕</button>
+      </div>
+      <div class="theme-grid">
+        <button class="theme-option active" data-theme="rose">
+          <div class="theme-swatch" style="background:linear-gradient(135deg,#ff6b8a,#c94b9e)"></div>
+          <span>Rose Bloom</span><small>🌸</small>
+        </button>
+        <button class="theme-option" data-theme="sage">
+          <div class="theme-swatch" style="background:linear-gradient(135deg,#6bcf9e,#2e8b6e)"></div>
+          <span>Sage Garden</span><small>🌿</small>
+        </button>
+        <button class="theme-option" data-theme="ocean">
+          <div class="theme-swatch" style="background:linear-gradient(135deg,#4fc3f7,#1565c0)"></div>
+          <span>Deep Ocean</span><small>🌊</small>
+        </button>
+        <button class="theme-option" data-theme="lavender">
+          <div class="theme-swatch" style="background:linear-gradient(135deg,#b39ddb,#7b1fa2)"></div>
+          <span>Lavender Mist</span><small>💜</small>
+        </button>
+        <button class="theme-option" data-theme="gold">
+          <div class="theme-swatch" style="background:linear-gradient(135deg,#ffd54f,#e65100)"></div>
+          <span>Golden Hour</span><small>🌅</small>
+        </button>
+        <button class="theme-option" data-theme="midnight">
+          <div class="theme-swatch" style="background:linear-gradient(135deg,#546e7a,#102027)"></div>
+          <span>Midnight</span><small>🌙</small>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Supplement Modal -->
+  <div class="modal-overlay" id="supModal">
+    <div class="modal glass-modal">
+      <div class="modal-header">
+        <h2 id="supModalTitle">Add Supplement</h2>
+        <button class="close-btn" data-modal="supModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label">Name *</label>
+        <input type="text" id="supName" class="glass-input" placeholder="e.g. Vitamin D3+K2" />
+
+        <label class="field-label">Brand / Product</label>
+        <input type="text" id="supBrand" class="glass-input" placeholder="e.g. HK Vitals" />
+
+        <label class="field-label">When to Take</label>
+        <select id="supWhen" class="glass-input">
+          <option value="Morning with breakfast">Morning with breakfast</option>
+          <option value="With lunch">With lunch</option>
+          <option value="Evening with dinner">Evening with dinner</option>
+          <option value="Before bed">Before bed</option>
+          <option value="Anytime">Anytime</option>
+          <option value="Custom">Custom…</option>
+        </select>
+        <input type="text" id="supWhenCustom" class="glass-input" placeholder="Custom timing…" style="display:none;margin-top:8px" />
+
+        <label class="field-label">How to Take</label>
+        <input type="text" id="supHow" class="glass-input" placeholder="e.g. With fat-rich food, 1 capsule" />
+
+        <label class="field-label">Dose / Notes</label>
+        <input type="text" id="supDose" class="glass-input" placeholder="e.g. 1 scoop in water" />
+
+        <label class="field-label">Nutritional Info Photo</label>
+        <div class="photo-upload-area" id="photoUploadArea">
+          <input type="file" id="supPhoto" accept="image/*" style="display:none" />
+          <img id="supPhotoPreview" style="display:none;width:100%;border-radius:12px;margin-top:8px" />
+          <button class="ghost-btn" id="photoPickBtn">📷 Attach Photo</button>
+        </div>
+
+        <label class="field-label">Start Date</label>
+        <input type="date" id="supStart" class="glass-input" />
+
+        <label class="field-label">Color Tag</label>
+        <div class="color-tags" id="colorTags">
+          <button class="color-tag active" data-color="#ff6b8a" style="background:#ff6b8a"></button>
+          <button class="color-tag" data-color="#6bcf9e" style="background:#6bcf9e"></button>
+          <button class="color-tag" data-color="#4fc3f7" style="background:#4fc3f7"></button>
+          <button class="color-tag" data-color="#ffd54f" style="background:#ffd54f"></button>
+          <button class="color-tag" data-color="#b39ddb" style="background:#b39ddb"></button>
+          <button class="color-tag" data-color="#ff8a65" style="background:#ff8a65"></button>
+        </div>
+
+        <div class="modal-actions">
+          <button class="ghost-btn" data-modal="supModal">Cancel</button>
+          <button class="pill-btn" id="saveSupBtn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Supplement Detail Modal -->
+  <div class="modal-overlay" id="viewModal">
+    <div class="modal glass-modal">
+      <div class="modal-header">
+        <h2 id="viewSupName">Supplement</h2>
+        <button class="close-btn" data-modal="viewModal">✕</button>
+      </div>
+      <div class="modal-body" id="viewModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
